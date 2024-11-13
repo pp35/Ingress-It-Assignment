@@ -21,7 +21,6 @@ function generateContactHTML(contact) {
   const contactDiv = document.createElement('div');
   contactDiv.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4');
 
-  
   const phone = contact.phoneNumber ? `<a href="tel:${contact.phoneNumber}" class="text-blue-600">${contact.phoneNumber}</a>` : "Phone number not available";
   const lastMessage = contact.lastMessage ? `<span class="italic">${contact.lastMessage}</span>` : "No messages available";
 
@@ -30,25 +29,25 @@ function generateContactHTML(contact) {
     <p class="text-sm text-gray-600">Phone: ${phone}</p>
     <p class="mt-2 text-gray-800">Last Message: ${lastMessage}</p>
   `;
-  
+
   return contactDiv;
 }
 
 
 function generateHTML(data) {
   const container = document.getElementById("content");
-
   data.forEach(contact => {
     const contactDiv = generateContactHTML(contact);
     container.appendChild(contactDiv);
   });
+}
+
 async function sendToCRM(data, retries = 3) {
   const apiUrl = "https://jsonplaceholder.typicode.com/posts";
 
   const sendRequest = async () => {
     try {
-      console.log('Simulating API Call to send data to CRM...');
-
+      console.log('Simulating API Call to send data to CRM');
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -80,15 +79,15 @@ async function sendToCRM(data, retries = 3) {
 
 async function main() {
   try {
-    console.log("Generating HTML for contacts...");
+    console.log("Generating HTML for contacts");
     generateHTML(extractedData);
 
-    console.log("Sending data to CRM...");
+    console.log("Sending data to CRM");
     await sendToCRM(extractedData);
   } catch (error) {
     console.error("An error occurred in the main function:", error);
   }
 }
-}
 
-main()
+
+main();
