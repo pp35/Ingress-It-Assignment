@@ -104,12 +104,12 @@ function generateHTML(data) {
 
 
 // Function to send data to a CRM (simulated with placeholder API), with retry logic
-async function sendToCRM(data, retries = 3) {
-  const apiUrl = "https://jsonplaceholder.typicode.com/posts";
+async function sendToCRM(data, retries =3) {
+  const apiUrl = "https://jsonplaceholder.typicode.com/posts"; // It's not CRM Api its only placeholder api
 
   const sendRequest = async () => {
     try {
-      console.log('Attempting to send data to CRM...');
+      console.log('Attempting to send data to CRM');
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -128,7 +128,7 @@ async function sendToCRM(data, retries = 3) {
     } catch (error) {
       console.error("Error in API request:", error.message);
       if (retries > 1) {
-        console.log(`Retrying... attempts remaining: ${retries - 1}`);
+       
         return sendToCRM(data, retries - 1);  
       } else {
         console.error("Failed to send data after multiple attempts.");
