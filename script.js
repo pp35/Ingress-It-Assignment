@@ -1,6 +1,25 @@
 // Sample data for contacts
-let extractedData = [];
-
+// let extractedData = [{
+//   contactName: "Not Available",
+//   contactNumber: "+91 93485 20704",
+//   lastMessage: "SATYAM‎ GUPTA‎ is inviting‎ you to a scheduled Zoom meeting.\n\nTopic:‎ FIX SALARY‎ JOB &‎ NO‎ INVESTMENT WORK\nTime: Nov‎ 19,‎ 2024 Tonight08:00‎ PM‎ India\n\nJoin‎ Zoom Meeting\nhttps://us06web.zoom.us/j/81551756509\n\nMeeting ID: 815‎ 5175‎ 6509\n\n\nPlease‎ join this important telegram‎ group\nhttps://t.me/+lu2xeBK3tVdiNTQ1\n\nLife changing Work‎‎ From‎ Home‎ job‎ opportunity‎ without any‎ investment*‎‎ \nHost‎‎ :HR Satyam‎ Gupta \nFix‎ Salary‎ Job‎‎ Rs.18,000 to Rs.30,000‎‎ For fresher\nAnd also Available‎ daily‎‎ Base‎ fixed Salary Rs‎ 600‎ per Day\nApne‎‎ job‎ ke‎ liye apply kiya‎ tha‎‎ , yeh‎‎ job‎ opportunity‎ ap‎ miss mat kijiye‎‎ isme apko‎ job‎ ke bare‎ ma‎‎ sab‎‎ btaya‎ jayega yeh‎ telecalling‎ work‎ ha‎ aur‎ fixed salary‎ apko‎‎ di‎‎ jayegi‎ joining‎ letter‎ ke‎‎ sath agar‎ apko‎‎ koi‎‎ bhi‎ dought‎ ho toh apke dought‎‎ meeting‎ ma‎ clear‎ kardiye jayege but meeting‎ miss‎ mat kijiyega meeting‎ sirf‎ 20‎ to‎‎ 30‎ minutes‎ ki‎ rahegi‎ jisme‎ apko sari‎‎ jankari‎‎ di‎‎ jayegi‎‎ agar‎ ap‎‎ intrested‎ ha‎‎ toh‎ meeting ko‎‎ 8:00 pm join‎ kijiyega.‎ IMPORTANT‎‎ Agar apko‎ Link‎ Blue‎ show nhi‎ horaha‎‎ ha toh number‎ ko‎ save‎‎ kijiye‎‎ Thankyou \nNO‎ DEMAT ACCOUNT‎ OPENING‎‎ WORK \nNO‎ FOREVER‎‎ WORK\nNO AFFILIATE‎‎ MARKETING‎‎ \nNO‎ DIGITAL‎ MARKETING‎ \nONLY‎ ‎‎ CALLING‎‎ WORK‎ \nALARM‎‎ SET‎ KIJIYE‎ TAKI‎‎ AP‎ MEETING KO MISS NA‎ KAR SKE ISS‎ MEETING KI‎ APKO‎ KOI‎ RECCORDING NHI‎ MILEGI‎ YEH‎‎ MEETING‎ LIVE‎ HOGI...\n\nplz telegram‎ application download karke‎ rakhiye because meeting ma apko‎ telegram group‎ join karaya jayega ok\n\n\naap‎ job‎ ke liye serious‎ ho ?\n\nYes or‎ No ? \nMsg mee..\n4a"
+// },
+// {
+//   contactName: "Nidhi Pandey Oriental",
+//   contactNumber: "Not Available",
+//   lastMessage: "No Message"
+// },
+// {
+//   contactName: "Subham",
+//   contactNumber: "Not Available",
+//   lastMessage: "My le chaluga"
+// },
+// {
+//   contactName: "H",
+//   contactNumber: "Not Available",
+//   lastMessage: ","
+// },];
+let extractedData =[]
 // Select all chat containers 
 let chatContainers = document.querySelectorAll("div._ak8l");
 
@@ -39,7 +58,7 @@ function isToday(timestamp) {
 chatContainers.forEach((chat) => {
   try {
     let contactName = chat.querySelector("._ak8q")?.innerText; 
-    let lastMessageElement = chat.querySelector("._ak8j"); 
+    let lastMessageElement = chat.querySelector("._ak8k"); 
     let lastMessage = lastMessageElement
       ? lastMessageElement.textContent ||
         lastMessageElement.innerText ||
@@ -74,7 +93,19 @@ console.log(
   "Today's Chat Data:",
   JSON.stringify(extractedData, null, 2)
 );
+// Store extracted data in localStorage
+// localStorage.setItem("chatData", JSON.stringify(extractedData));
 
+// Retrieve the stored data
+const storedData = localStorage.getItem("chatData");
+console.log(storedData)
+// Parse the retrieved data
+if (storedData) {
+  const parsedData = JSON.parse(storedData);
+  console.log("Retrieved Chat Data:", parsedData);
+} else {
+  console.log("No chat data found in localStorage.");
+}
 // Function to create and style HTML for each contact
 function generateContactHTML(contact) {
   console.log("Generating HTML for contact:", contact); // Debug: contact data for HTML generation
@@ -112,25 +143,36 @@ function generateHTML(data) {
 }
 
 // Function to send data to a CRM (simulated with placeholder API)
-async function sendToCRM(data) {
+async function sendToCRM(data, retries = 3, delay = 2000) {
   const apiUrl = "https://jsonplaceholder.typicode.com/posts"; // Placeholder API for testing
   console.log("Sending data to CRM:", data);
 
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    if (response.ok) {
-      const jsonResponse = await response.json();
-      console.log("Data sent successfully:", jsonResponse);
-    } else {
-      throw new Error("Failed to send data");
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        console.log("Data sent successfully:", jsonResponse);
+        return jsonResponse; // Return on success
+      } else {
+        throw new Error(`Failed to send data (Attempt ${attempt})`);
+      }
+    } catch (error) {
+      console.error(`Error on attempt ${attempt}: ${error.message}`);
+
+      if (attempt < retries) {
+        console.log(`Retrying in ${delay / 1000} seconds...`);
+        await new Promise((resolve) => setTimeout(resolve, delay)); // Wait before retrying
+      } else {
+        console.error("Max retries reached. Data could not be sent.");
+        throw error; // Throw the error after max retries
+      }
     }
-  } catch (error) {
-    console.error("Error sending data:", error.message);
   }
 }
 
