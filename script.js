@@ -134,21 +134,11 @@ async function sendToCRM(data) {
   }
 }
 
-// Function to save extracted data as a JSON file
-function saveJSONData(data) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'chat_data.json';
-  link.click();
-}
-
-// Main function to control the flow: generate HTML, send data, and save JSON
+// Main function to control the flow: generate HTML and send data
 async function main() {
   try {
-    generateHTML(extractedData); // Render the contacts
-    await sendToCRM(extractedData); // Send the data to CRM (optional)
-    saveJSONData(extractedData); // Save the data as JSON file
+    generateHTML(extractedData);
+    await sendToCRM(extractedData);
   } catch (error) {
     console.error("An error occurred in the main function:", error.message);
   }
